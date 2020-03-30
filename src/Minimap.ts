@@ -3,6 +3,7 @@ import Level from "./Level";
 import Graphics from "./Graphics";
 import Vector from "./vector";
 import { LineUtil } from "./Line";
+import Raymarcher from "./Raymarcher";
 
 class Minimap {
   position: Vector;
@@ -50,6 +51,20 @@ class Minimap {
     graphics.popStrokeStyle();
 
     //  Draw view fustrum.
+    const marcher = new Raymarcher();
+    marcher.setOrigin(player.position);
+    marcher.addRay(player.orientation);
+    marcher.addRay(player.orientation.rotate(Math.PI/4));
+    marcher.addRay(player.orientation.rotate(-Math.PI/4));
+
+    const rayDistances = marcher.marchRays(level);
+
+    rayDistances.forEach(ray => {
+      const o = ray.orientation.scale(ray.distance).add(player.position);
+      LineUtil.draw({ p1: player.position.scale(0.2), p2: o.scale(0.2) }, graphics);
+      graphics.fillCircle(o.scale(0.2), 2);
+    });
+
 
   }
 }
