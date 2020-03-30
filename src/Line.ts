@@ -41,6 +41,24 @@ class LineUtil {
       );
     return { p1, p2 };
   }
+
+  static distanceFromPoint(p: Vector, line: Line) {
+    const v = line.p1;
+    const w = line.p2;
+    const l2 = v.distanceSquared(w);
+
+    if (l2 === 0) return p.distance(v);
+
+    let t = ((p.x - v.x) * (w.x - v.x) + (p.y - v.y) * (w.y - v.y)) / l2;
+    t = Math.max(0, Math.min(1, t));
+
+    return p.distance(
+      new Vector(
+        v.x + t * (w.x - v.x),
+        v.y + t * (w.y - v.y)
+      )
+    );
+  }
 }
 
 export { Line, LineUtil }

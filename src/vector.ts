@@ -16,7 +16,11 @@ export default class Vector {
   }
 
   distance(other: Vector) {
-    return Math.sqrt(Math.pow(this.x-other.x, 2) + Math.pow(this.y - other.y, 2));
+    return Math.sqrt(this.distanceSquared(other));
+  }
+
+  distanceSquared(other: Vector) {
+    return Math.pow(this.x-other.x, 2) + Math.pow(this.y - other.y, 2);
   }
 
   scale(scalar: number): Vector {
@@ -117,6 +121,4 @@ export default class Vector {
   equals(other: Vector) {
     return this.x === other.x && this.y === other.y;
   }
-
-  
 }

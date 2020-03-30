@@ -20,7 +20,11 @@ const state = new GameState(player);
 const graphics = new Graphics(ctx);
 const minimap = new Minimap(new Vector(200, 200));
 
-const level = new Level([LineUtil.create(300, 20, 300, 300)]);
+const level = new Level([
+  LineUtil.create(300, 20, 300, 800),
+  LineUtil.create(100, 20, 100, 800),
+  LineUtil.create(20, 200, 800, 200),
+]);
 
 inputController.subscribe(player);
 
@@ -39,6 +43,7 @@ function loop() {
   player.draw(graphics);
 
   minimap.draw(graphics, player, level);
+  
 }
 
 window.setInterval(loop, sleep);

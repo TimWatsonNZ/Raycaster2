@@ -8,6 +8,10 @@ view fustrum.
   Some key listeners.
 
 Stage 2 - write system to find distance to closest obstacle.
+        - Create one ray coming out of player and draw on minimap.
+        - Find closest obstacle and march one step.
+        - March until distance < epsilon.
+        - Create other rays.
 
 Stage 3 - Translate these distances into graphics.
 
