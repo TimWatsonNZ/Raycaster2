@@ -44,7 +44,7 @@ export default class Player implements IHandlesInput {
   }
 
   draw(graphics: Graphics) {
-    graphics.drawCircle(this.position, 10);
+    // graphics.drawCircle(this.position, 10);
   }
   
   update(state: GameState) {
