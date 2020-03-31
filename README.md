@@ -14,7 +14,10 @@ Stage 2 - write system to find distance to closest obstacle.
         - Create other rays.
 
 Stage 3 - Translate these distances into graphics.
+        - Done
+        
+Stage 4 - Fix fish eye.
+        - Add floor and ceiling.
 
-Stage 4?? - Attempt to make some kind of game out of all this.
-          - Attempt to be able to have floors on top of floors
-
+Fish eye: Find distance as if the eye was directly in front of object.
+Know the distance and I know the x offset. 

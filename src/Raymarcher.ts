@@ -4,7 +4,7 @@ import { LineUtil } from "./Line";
 
 class Raymarcher {
   origin: Vector;
-  rays: Vector[];
+  rays: { ray: Vector, angle: number }[];
   horizonDistance = 800;
   epsilon = 0.5;
 
@@ -12,8 +12,8 @@ class Raymarcher {
     this.rays = [];
   }
 
-  addRay(ray: Vector) {
-    this.rays.push(ray);
+  addRay(ray: Vector, angle: number) {
+    this.rays.push({ ray, angle });
   }
 
   setOrigin(origin: Vector) {
@@ -24,7 +24,7 @@ class Raymarcher {
     return this.rays.map(ray => this.marchRay(ray, level));
   }
 
-  marchRay(ray: Vector, level: Level) {
+  marchRay(ray: { ray: Vector, angle: number}, level: Level) {
     let totalDistance = 0;
     let marchPoint = this.origin;
     while (true) {
@@ -42,10 +42,10 @@ class Raymarcher {
         break;
       }
 
-      marchPoint = ray.scale(leastDistance.distance).add(marchPoint);
+      marchPoint = ray.ray.scale(leastDistance.distance).add(marchPoint);
     }
 
-    return { orientation: ray, distance: totalDistance };
+    return { ray, distance: totalDistance };
   }
 }
 
