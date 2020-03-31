@@ -1,15 +1,32 @@
 import Vector from "./vector";
+import Camera from "./Camera";
 
 class Graphics {
   ctx: CanvasRenderingContext2D;
+  camera: Camera;
 
   fillStyles: string[] = [];
   strokeStyles: string[] = [];
+  width: number;
+  height: number;
 
-  constructor(ctx: CanvasRenderingContext2D) {
+  constructor(width: number, height: number) {
+    this.width = width;
+    this.height = height;
+    
+    const canvas = document.createElement('canvas');
+    canvas.height = this.height;
+    canvas.width = this.width;
+
+    const ctx = canvas.getContext('2d');
+
+    document.body.appendChild(canvas);
+
     this.ctx = ctx;
     this.fillStyles = [];
     this.strokeStyles = [];
+
+    this.camera = new Camera(Math.PI/2, 401, 10, 800);
   }
 
   drawCircle(point: Vector, radius: number) {

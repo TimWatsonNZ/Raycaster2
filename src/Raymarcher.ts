@@ -1,14 +1,17 @@
 import Vector from "./vector";
 import Level from "./Level";
 import { LineUtil } from "./Line";
+import Graphics from "./Graphics";
+import Camera from "./Camera";
 
 class Raymarcher {
-  origin: Vector;
   rays: { ray: Vector, angle: number }[];
   horizonDistance = 800;
   epsilon = 0.5;
+  camera: Camera;
 
-  constructor() {
+  constructor(camera: Camera) {
+    this.camera = camera;
     this.rays = [];
   }
 
@@ -16,17 +19,13 @@ class Raymarcher {
     this.rays.push({ ray, angle });
   }
 
-  setOrigin(origin: Vector) {
-    this.origin = origin;
+  marchRays(level: Level, origin: Vector) {
+    return this.rays.map(ray => this.marchRay(ray, level, origin));
   }
 
-  marchRays(level: Level) {
-    return this.rays.map(ray => this.marchRay(ray, level));
-  }
-
-  marchRay(ray: { ray: Vector, angle: number}, level: Level) {
+  marchRay(ray: { ray: Vector, angle: number}, level: Level, origin: Vector) {
     let totalDistance = 0;
-    let marchPoint = this.origin;
+    let marchPoint = origin;
     while (true) {
       const distances = level.geometry.map(line => LineUtil.distanceFromPoint(marchPoint, line));
       const leastDistance = distances.reduce((smallest, current, index) => {
@@ -46,6 +45,36 @@ class Raymarcher {
     }
 
     return { ray, distance: totalDistance };
+  }
+
+  render(level: Level, graphics: Graphics, origin: Vector, orientation: Vector) {
+    this.rays = [];
+    for (let i=0;i<this.camera.rayCount;i++) {
+      const angle = -this.camera.viewAngle/2 + this.camera.viewAngle/this.camera.rayCount * i;
+      this.rays.push({ ray: orientation.rotate(angle), angle });
+    }
+
+    const rayDistances = this.marchRays(level, origin);
+
+    rayDistances.forEach((ray, index) => {
+      const o = ray.ray.ray.scale(ray.distance).add(origin);
+      LineUtil.draw({ p1: origin.scale(0.2), p2: o.scale(0.2) }, graphics);
+      graphics.fillCircle(o.scale(0.2), 2);
+
+      const wallHeight = 40;
+      const wallWidth = graphics.width / rayDistances.length;
+      
+      if (ray.distance < graphics.camera.horizon) {
+
+        const adjustedDistance = Math.cos(ray.ray.angle) * ray.distance;
+        const w = wallHeight / adjustedDistance * graphics.height;
+        const x = graphics.width / rayDistances.length * index;
+
+
+        const start = { x, y: graphics.height/2 - graphics.camera.height };
+        graphics.ctx.fillRect(start.x, start.y, wallWidth, w);
+      }
+    });
   }
 }
 
