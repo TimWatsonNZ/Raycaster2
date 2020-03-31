@@ -48,6 +48,7 @@ class Raymarcher {
   }
 
   render(level: Level, graphics: Graphics, origin: Vector, orientation: Vector) {
+    
     this.rays = [];
     for (let i=0;i<this.camera.rayCount;i++) {
       const angle = -this.camera.viewAngle/2 + this.camera.viewAngle/this.camera.rayCount * i;
@@ -58,21 +59,39 @@ class Raymarcher {
 
     rayDistances.forEach((ray, index) => {
       const o = ray.ray.ray.scale(ray.distance).add(origin);
-      LineUtil.draw({ p1: origin.scale(0.2), p2: o.scale(0.2) }, graphics);
-      graphics.fillCircle(o.scale(0.2), 2);
 
       const wallHeight = 40;
       const wallWidth = graphics.width / rayDistances.length;
       
+      const x = graphics.width / rayDistances.length * index;
+
       if (ray.distance < graphics.camera.horizon) {
-
         const adjustedDistance = Math.cos(ray.ray.angle) * ray.distance;
-        const w = wallHeight / adjustedDistance * graphics.height;
-        const x = graphics.width / rayDistances.length * index;
+        const h = wallHeight / adjustedDistance * graphics.height;
 
+        const start = { x, y: graphics.height/2 - h/2 - graphics.camera.height };
+  
+        const alpha = 1 - ray.distance / this.camera.horizon;
+        graphics.pushFillStyle(`rgba(255,0,0,${alpha})`);
+        graphics.ctx.fillRect(start.x, start.y, wallWidth, h);
+        graphics.popFillStyle();
 
-        const start = { x, y: graphics.height/2 - graphics.camera.height };
-        graphics.ctx.fillRect(start.x, start.y, wallWidth, w);
+        graphics.pushFillStyle(`rgba(0,0,0,1)`);
+        graphics.ctx.fillRect(start.x, 0, wallWidth, start.y);
+        graphics.popFillStyle();
+
+        graphics.pushFillStyle(`rgba(0,0,255,1)`);
+        graphics.ctx.fillRect(start.x, start.y + h, wallWidth, graphics.height);
+        graphics.popFillStyle();
+        
+      } else {
+        graphics.pushFillStyle(`rgba(0,0,0,1)`);
+        graphics.ctx.fillRect(x, 0, wallWidth, graphics.height / 2 - graphics.camera.height);
+        graphics.popFillStyle();
+
+        graphics.pushFillStyle(`rgba(0,0,255,1)`);
+        graphics.ctx.fillRect(x, graphics.height / 2 - graphics.camera.height, wallWidth, graphics.height);
+        graphics.popFillStyle();
       }
     });
   }

@@ -18,6 +18,8 @@ Stage 3 - Translate these distances into graphics.
         
 Stage 4 - Fix fish eye.
         - Add floor and ceiling.
+        - Add texturing
+        - Add distance fog.
 
 Fish eye: Find distance as if the eye was directly in front of object.
 Know the distance and I know the x offset. 

@@ -26,7 +26,7 @@ class Graphics {
     this.fillStyles = [];
     this.strokeStyles = [];
 
-    this.camera = new Camera(Math.PI/2, 401, 10, 800);
+    this.camera = new Camera(Math.PI/2, 401, 100, 1600);
   }
 
   drawCircle(point: Vector, radius: number) {

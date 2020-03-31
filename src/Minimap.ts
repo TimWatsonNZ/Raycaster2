@@ -24,32 +24,6 @@ class Minimap {
     const playerPosition = player.position.scale(0.2);
     graphics.fillCircle(playerPosition, 2);
     graphics.popFillStyle();
-
-    const distances = level.geometry.map(line => LineUtil.distanceFromPoint(player.position, line));
-    const leastDistance = distances.reduce((smallest, current, index) => {
-      if (current < smallest.distance) {
-        return { index, distance: current };
-      } else {
-        return smallest;
-      }
-    }, { index: 0, distance: Number.MAX_VALUE });
-
-    level.geometry.forEach((line, i) => {
-      if (i === leastDistance.index) {
-        graphics.pushStrokeStyle('#FF0000');
-      } else {
-        graphics.pushStrokeStyle('#00FF00');
-      }
-
-      const transformedLine = { 
-        p1: line.p1.scale(0.2),
-        p2: line.p2.scale(0.2),
-      }
-      LineUtil.draw(transformedLine, graphics);
-      
-      graphics.popStrokeStyle();
-    });
-    graphics.popStrokeStyle();
   }
 }
 
